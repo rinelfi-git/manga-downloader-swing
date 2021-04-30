@@ -60,9 +60,9 @@ public class MainWindow extends javax.swing.JFrame {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
-        om_du_projet_pan = new javax.swing.JPanel();
+        nom_du_projet_pan = new javax.swing.JPanel();
         nom_du_projet_lab = new javax.swing.JLabel();
-        nom_du_projet_input = new javax.swing.JTextField();
+        nomDuProjetCombo = new javax.swing.JComboBox<>();
         container2 = new javax.swing.JPanel();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
         filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
@@ -118,6 +118,7 @@ public class MainWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manga scan downloader");
         setMinimumSize(new java.awt.Dimension(500, 600));
+        setPreferredSize(new java.awt.Dimension(500, 600));
         setResizable(false);
 
         root_panel.setBackground(new java.awt.Color(255, 255, 255));
@@ -125,36 +126,38 @@ public class MainWindow extends javax.swing.JFrame {
 
         container1.setBackground(new java.awt.Color(255, 255, 255));
         container1.setMaximumSize(new java.awt.Dimension(2147483647, 30));
-        container1.setMinimumSize(new java.awt.Dimension(100, 30));
-        container1.setPreferredSize(new java.awt.Dimension(400, 30));
+        container1.setMinimumSize(new java.awt.Dimension(400, 45));
+        container1.setPreferredSize(new java.awt.Dimension(400, 45));
         container1.setLayout(new java.awt.BorderLayout());
         container1.add(filler1, java.awt.BorderLayout.NORTH);
         container1.add(filler2, java.awt.BorderLayout.LINE_END);
         container1.add(filler3, java.awt.BorderLayout.WEST);
 
-        om_du_projet_pan.setBackground(new java.awt.Color(255, 255, 255));
-        om_du_projet_pan.setMaximumSize(new java.awt.Dimension(2147483647, 20));
-        om_du_projet_pan.setMinimumSize(new java.awt.Dimension(100, 20));
-        om_du_projet_pan.setPreferredSize(new java.awt.Dimension(580, 20));
-        om_du_projet_pan.setLayout(new java.awt.BorderLayout(5, 0));
+        nom_du_projet_pan.setBackground(new java.awt.Color(255, 255, 255));
+        nom_du_projet_pan.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        nom_du_projet_pan.setMinimumSize(new java.awt.Dimension(580, 50));
+        nom_du_projet_pan.setPreferredSize(new java.awt.Dimension(580, 50));
+        nom_du_projet_pan.setLayout(new java.awt.BorderLayout(5, 0));
 
         nom_du_projet_lab.setBackground(new java.awt.Color(255, 255, 255));
-        nom_du_projet_lab.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         nom_du_projet_lab.setText("Nom du projet");
         nom_du_projet_lab.setMaximumSize(new java.awt.Dimension(110, 14));
         nom_du_projet_lab.setMinimumSize(new java.awt.Dimension(110, 14));
         nom_du_projet_lab.setPreferredSize(new java.awt.Dimension(110, 14));
-        om_du_projet_pan.add(nom_du_projet_lab, java.awt.BorderLayout.LINE_START);
-        om_du_projet_pan.add(nom_du_projet_input, java.awt.BorderLayout.CENTER);
+        nom_du_projet_pan.add(nom_du_projet_lab, java.awt.BorderLayout.NORTH);
 
-        container1.add(om_du_projet_pan, java.awt.BorderLayout.CENTER);
+        nomDuProjetCombo.setEditable(true);
+        nom_du_projet_pan.add(nomDuProjetCombo, java.awt.BorderLayout.CENTER);
+
+        container1.add(nom_du_projet_pan, java.awt.BorderLayout.CENTER);
 
         root_panel.add(container1);
 
         container2.setBackground(new java.awt.Color(255, 255, 255));
-        container2.setMaximumSize(new java.awt.Dimension(2147483647, 30));
-        container2.setMinimumSize(new java.awt.Dimension(100, 30));
-        container2.setPreferredSize(new java.awt.Dimension(400, 30));
+        container2.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        container2.setMinimumSize(new java.awt.Dimension(400, 45));
+        container2.setName(""); // NOI18N
+        container2.setPreferredSize(new java.awt.Dimension(400, 45));
         container2.setLayout(new java.awt.BorderLayout());
         container2.add(filler4, java.awt.BorderLayout.NORTH);
         container2.add(filler5, java.awt.BorderLayout.LINE_END);
@@ -167,12 +170,11 @@ public class MainWindow extends javax.swing.JFrame {
         project_name_panel1.setLayout(new java.awt.BorderLayout(5, 0));
 
         project_name_lab1.setBackground(new java.awt.Color(255, 255, 255));
-        project_name_lab1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         project_name_lab1.setText("Chapitre");
         project_name_lab1.setMaximumSize(new java.awt.Dimension(110, 14));
         project_name_lab1.setMinimumSize(new java.awt.Dimension(110, 14));
         project_name_lab1.setPreferredSize(new java.awt.Dimension(110, 14));
-        project_name_panel1.add(project_name_lab1, java.awt.BorderLayout.LINE_START);
+        project_name_panel1.add(project_name_lab1, java.awt.BorderLayout.NORTH);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setAlignmentX(0.0F);
@@ -193,9 +195,10 @@ public class MainWindow extends javax.swing.JFrame {
         root_panel.add(container2);
 
         container3.setBackground(new java.awt.Color(255, 255, 255));
-        container3.setMaximumSize(new java.awt.Dimension(2147483647, 30));
-        container3.setMinimumSize(new java.awt.Dimension(100, 30));
-        container3.setPreferredSize(new java.awt.Dimension(400, 30));
+        container3.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        container3.setMinimumSize(new java.awt.Dimension(400, 45));
+        container3.setName(""); // NOI18N
+        container3.setPreferredSize(new java.awt.Dimension(400, 45));
         container3.setLayout(new java.awt.BorderLayout());
         container3.add(filler7, java.awt.BorderLayout.NORTH);
         container3.add(filler8, java.awt.BorderLayout.LINE_END);
@@ -208,12 +211,11 @@ public class MainWindow extends javax.swing.JFrame {
         project_name_panel2.setLayout(new java.awt.BorderLayout(5, 0));
 
         project_name_lab2.setBackground(new java.awt.Color(255, 255, 255));
-        project_name_lab2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         project_name_lab2.setText("Page");
         project_name_lab2.setMaximumSize(new java.awt.Dimension(110, 14));
         project_name_lab2.setMinimumSize(new java.awt.Dimension(110, 14));
         project_name_lab2.setPreferredSize(new java.awt.Dimension(110, 14));
-        project_name_panel2.add(project_name_lab2, java.awt.BorderLayout.LINE_START);
+        project_name_panel2.add(project_name_lab2, java.awt.BorderLayout.NORTH);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setAlignmentX(0.0F);
@@ -233,9 +235,9 @@ public class MainWindow extends javax.swing.JFrame {
         root_panel.add(container3);
 
         container4.setBackground(new java.awt.Color(255, 255, 255));
-        container4.setMaximumSize(new java.awt.Dimension(2147483647, 30));
-        container4.setMinimumSize(new java.awt.Dimension(100, 30));
-        container4.setPreferredSize(new java.awt.Dimension(400, 30));
+        container4.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        container4.setMinimumSize(new java.awt.Dimension(400, 45));
+        container4.setPreferredSize(new java.awt.Dimension(400, 45));
         container4.setLayout(new java.awt.BorderLayout());
         container4.add(filler10, java.awt.BorderLayout.NORTH);
         container4.add(filler11, java.awt.BorderLayout.LINE_END);
@@ -248,9 +250,8 @@ public class MainWindow extends javax.swing.JFrame {
         project_name_panel3.setLayout(new java.awt.BorderLayout());
 
         project_name_lab3.setBackground(new java.awt.Color(255, 255, 255));
-        project_name_lab3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         project_name_lab3.setText("Dossier de sauvegarde");
-        project_name_panel3.add(project_name_lab3, java.awt.BorderLayout.LINE_START);
+        project_name_panel3.add(project_name_lab3, java.awt.BorderLayout.NORTH);
         project_name_panel3.add(sauvegarde_input, java.awt.BorderLayout.CENTER);
 
         jButton1.setText("Parcourir");
@@ -266,9 +267,9 @@ public class MainWindow extends javax.swing.JFrame {
         root_panel.add(container4);
 
         container5.setBackground(new java.awt.Color(255, 255, 255));
-        container5.setMaximumSize(new java.awt.Dimension(2147483647, 30));
-        container5.setMinimumSize(new java.awt.Dimension(100, 30));
-        container5.setPreferredSize(new java.awt.Dimension(400, 30));
+        container5.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        container5.setMinimumSize(new java.awt.Dimension(400, 45));
+        container5.setPreferredSize(new java.awt.Dimension(400, 45));
         container5.setLayout(new java.awt.BorderLayout());
         container5.add(filler13, java.awt.BorderLayout.NORTH);
         container5.add(filler14, java.awt.BorderLayout.LINE_END);
@@ -281,12 +282,11 @@ public class MainWindow extends javax.swing.JFrame {
         project_name_panel4.setLayout(new java.awt.BorderLayout(5, 0));
 
         project_name_lab4.setBackground(new java.awt.Color(255, 255, 255));
-        project_name_lab4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         project_name_lab4.setText("Lien");
         project_name_lab4.setMaximumSize(new java.awt.Dimension(110, 14));
         project_name_lab4.setMinimumSize(new java.awt.Dimension(110, 14));
         project_name_lab4.setPreferredSize(new java.awt.Dimension(110, 14));
-        project_name_panel4.add(project_name_lab4, java.awt.BorderLayout.LINE_START);
+        project_name_panel4.add(project_name_lab4, java.awt.BorderLayout.NORTH);
 
         lien_input.setToolTipText("http://domaine.com/chemin/vers/le/chapitre/{{chapitre}}/{{page}}.{{ext}}");
         project_name_panel4.add(lien_input, java.awt.BorderLayout.CENTER);
@@ -296,9 +296,9 @@ public class MainWindow extends javax.swing.JFrame {
         root_panel.add(container5);
 
         container7.setBackground(new java.awt.Color(255, 255, 255));
-        container7.setMaximumSize(new java.awt.Dimension(2147483647, 30));
-        container7.setMinimumSize(new java.awt.Dimension(100, 30));
-        container7.setPreferredSize(new java.awt.Dimension(400, 30));
+        container7.setMaximumSize(new java.awt.Dimension(2147483647, 50));
+        container7.setMinimumSize(new java.awt.Dimension(400, 45));
+        container7.setPreferredSize(new java.awt.Dimension(400, 45));
         container7.setLayout(new javax.swing.BoxLayout(container7, javax.swing.BoxLayout.LINE_AXIS));
         container7.add(filler21);
 
@@ -404,7 +404,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void charger_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_charger_btnActionPerformed
         if (information_complet()) {
             bouton_charger();
-            final String nom_du_projet = nom_du_projet_input.getText(),
+            final String nom_du_projet = nomDuProjetCombo.getSelectedItem().toString(),
                     dossier_de_sauvegarde = sauvegarde_input.getText(),
                     lien_chapitre = lien_input.getText();
             final int chapitre = Integer.valueOf(chapitre_spin.getValue().toString()),
@@ -522,10 +522,10 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField lien_input;
     private javax.swing.JTable liste_de_tache_table;
-    private javax.swing.JTextField nom_du_projet_input;
+    private javax.swing.JComboBox<String> nomDuProjetCombo;
     private javax.swing.JLabel nom_du_projet_lab;
+    private javax.swing.JPanel nom_du_projet_pan;
     private javax.swing.JButton nouveau_btn;
-    private javax.swing.JPanel om_du_projet_pan;
     private javax.swing.JSpinner premier_page_spin;
     private javax.swing.JLabel project_name_lab1;
     private javax.swing.JLabel project_name_lab2;
@@ -544,7 +544,7 @@ public class MainWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private boolean information_complet() {
-        final boolean nom_de_projet_valide = !this.nom_du_projet_input.getText().equals(""),
+        final boolean nom_de_projet_valide = !this.nomDuProjetCombo.getSelectedItem().toString().equals(""),
                 chapitre_valide = !chapitre_spin.getValue().toString().equals("") || is_number(chapitre_spin.getValue().toString()),
                 page_valide = !premier_page_spin.getValue().toString().equals("") || is_number(premier_page_spin.getValue().toString()),
                 sauvegarde_valide = !this.sauvegarde_input.getText().equals("");
