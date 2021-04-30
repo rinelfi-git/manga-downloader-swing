@@ -5,6 +5,8 @@
  */
 package mg.rinelfi.manga_scan_downloader.gui;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import mg.rinelfi.manga_scan_downloader.request.TelechargementFichier;
@@ -38,6 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         initComponents();
         initialiser_boutons();
+        evenementsPersonnalises();
         this.last_location = System.getProperty("user.home");
         this.configuration = new HashMap<>();
         this.taches = new ArrayList<>();
@@ -468,7 +473,7 @@ public class MainWindow extends javax.swing.JFrame {
             threads.add(runnable);
         }
         final int TAILLE_THREAD = threads.size();
-        for(int i = 0; i < TAILLE_THREAD && i < this.nombre_de_file; i++) {
+        for (int i = 0; i < TAILLE_THREAD && i < this.nombre_de_file; i++) {
             new Thread(threads.get(i)).start();
         }
     }//GEN-LAST:event_demarrer_btnActionPerformed
@@ -557,11 +562,13 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void verifier_telechargements() {
         int taille_thread = threads.size();
-        for(int i = 0, active = 0; i < taille_thread && active < this.nombre_de_file; i++) {
-            if(taches.get(i).telechargement_est_effectue()) active++;
-            
+        for (int i = 0, active = 0; i < taille_thread && active < this.nombre_de_file; i++) {
+            if (taches.get(i).telechargement_est_effectue()) {
+                active++;
+            }
+
         }
-        
+
         boolean tache_restant = false;
         for (TelechargementFichier tache : this.taches) {
             if (!tache.fichier_est_telecgarde()) {
@@ -601,5 +608,35 @@ public class MainWindow extends javax.swing.JFrame {
         charger_btn.setEnabled(true);
         demarrer_btn.setEnabled(false);
         arreter_btn.setEnabled(false);
+    }
+
+    private void evenementsPersonnalises() {
+        final JTextField nomDuProjetEditor = (JTextField) nomDuProjetCombo.getEditor().getEditorComponent();
+        nomDuProjetEditor.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                nomDuProjetEditor.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                final String projet = nomDuProjetEditor.getText();
+                final int TAILLE_COMBO = nomDuProjetCombo.getItemCount();
+                boolean elementExistant = false;
+                final ListModel<String> model = nomDuProjetCombo.getModel();
+                for (int i = 0; i < TAILLE_COMBO; i++) {
+                    if (!projet.equals("") && nomDuProjetCombo.getItemAt(i).equalsIgnoreCase(projet)) {
+                        elementExistant = true;
+                    }
+                }
+                if (!elementExistant) {
+                    nomDuProjetCombo.addItem(projet);
+                    nomDuProjetCombo.setSelectedIndex(TAILLE_COMBO);
+                    System.out.println("added");
+                }
+            }
+        });
+
     }
 }
