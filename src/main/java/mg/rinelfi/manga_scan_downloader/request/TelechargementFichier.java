@@ -14,11 +14,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mg.rinelfi.manga_scan_downloader.interfaces.Observable;
 import mg.rinelfi.manga_scan_downloader.interfaces.Observer;
 
 /**
@@ -33,6 +30,7 @@ public class TelechargementFichier {
     private final int chiffre_chapitre, chiffre_page, chapitre, page;
     private int index_extension;
     private final boolean chapitre_formate, page_formatee;
+    private boolean en_attente, en_cours, termine;
     private final String[] extensions;
     private Observer observer;
     private boolean fichier_telecharge;
@@ -53,6 +51,18 @@ public class TelechargementFichier {
         this.page_formatee = page_formatee;
         this.extensions = extensions;
         this.charger_information();
+    }
+
+    public boolean is_en_attente() {
+        return this.en_attente;
+    }
+
+    public boolean is_en_cours() {
+        return this.en_cours;
+    }
+
+    public boolean is_termine() {
+        return this.termine;
     }
 
     public boolean fichier_existe() {
@@ -99,6 +109,7 @@ public class TelechargementFichier {
     }
 
     public void telecharger() throws MalformedURLException, IOException {
+        this.en_attente = false;
         final int TAILLE_TAMPON = 1024;
         byte[] tampon = new byte[TAILLE_TAMPON];
         HttpURLConnection connexion = (HttpURLConnection) (new URL(this.lien_formate())).openConnection();
@@ -117,8 +128,12 @@ public class TelechargementFichier {
                     flux_sortant.write(tampon, 0, byte_lues);
                     flux_sortant.flush();
                     taille_ecrites += byte_lues;
+                    this.en_cours = true;
+                    this.termine = false;
                     this.observer.observation((int) ((float) taille_ecrites * 100 / (float) this.taille));
                 }
+                this.en_cours = false;
+                this.termine = true;
                 this.observer.observation(100);
                 flux_sortant.close();
                 flux_entrant.close();
@@ -219,7 +234,7 @@ public class TelechargementFichier {
     public void telechargement_effectue(boolean fichier_telecharge) {
         this.fichier_telecharge = fichier_telecharge;
     }
-    
+
     public boolean fichier_est_telecgarde() {
         return this.fichier_telecharge;
     }

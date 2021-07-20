@@ -32,9 +32,10 @@ public class MainWindow extends javax.swing.JFrame {
     private String last_location;
     private Map<String, Object> configuration;
     private List<TelechargementFichier> taches;
-    private volatile List<Runnable> threads;
+    private List<Thread> threads;
     private final String[] extensions;
     private int nombre_de_file;
+    private final int PAR_TELECHARGEMENT = 3;
 
     /**
      * Creates new form NewJFrame
@@ -450,11 +451,14 @@ public class MainWindow extends javax.swing.JFrame {
     private void demarrer_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_demarrer_btnActionPerformed
         DefaultTableModel model_table = (DefaultTableModel) liste_de_tache_table.getModel();
         final int TAILLE_TACHE = taches.size();
-        bouton_demarrer();
-        for (int element = 0; element < TAILLE_TACHE; element++) {
-            final int ligne = element;
-            Runnable runnable = () -> {
+        this.threads = new ArrayList<>();
+        for (int iteration = 0; iteration < TAILLE_TACHE; iteration++) {
+            final int ligne = iteration;
+            Thread thread = new Thread(() -> {
                 try {
+                    if (this.threads.size() > 0 && ligne > PAR_TELECHARGEMENT) {
+                        this.threads.get(ligne - 1).join();
+                    }
                     taches.get(ligne).ajouter_observateur_etat(avancement -> {
                         model_table.setValueAt("Téléchargement", ligne, 2);
                         if (((int) avancement) > 0 && ((int) avancement) < 100) {
@@ -462,20 +466,20 @@ public class MainWindow extends javax.swing.JFrame {
                         } else {
                             model_table.setValueAt("Terminé", ligne, 2);
                             taches.get(ligne).telechargement_effectue(true);
-                            verifier_telechargements();
                         }
                     });
                     taches.get(ligne).telecharger();
+                    while (!taches.get(ligne).is_termine()) {
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            };
-            threads.add(runnable);
+            });
+            threads.add(thread);
         }
-        final int TAILLE_THREAD = threads.size();
-        for (int i = 0; i < TAILLE_THREAD && i < this.nombre_de_file; i++) {
-            new Thread(threads.get(i)).start();
-        }
+        this.threads.forEach(thread -> thread.start());
     }//GEN-LAST:event_demarrer_btnActionPerformed
 
     private void arreter_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_arreter_btnActionPerformed
@@ -561,23 +565,32 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void verifier_telechargements() {
-        int taille_thread = threads.size();
-        for (int i = 0, active = 0; i < taille_thread && active < this.nombre_de_file; i++) {
-            if (taches.get(i).telechargement_est_effectue()) {
-                active++;
-            }
-
-        }
-
         boolean tache_restant = false;
+        DefaultTableModel model_table = (DefaultTableModel) liste_de_tache_table.getModel();
+        int[] ligne = new int[]{0};
         for (TelechargementFichier tache : this.taches) {
-            if (!tache.fichier_est_telecgarde()) {
+            ligne[0]++;
+            if (tache.is_en_attente()) {
                 tache_restant = true;
+                tache.ajouter_observateur_etat(avancement -> {
+                    model_table.setValueAt("Téléchargement", ligne[0], 2);
+                    if (((int) avancement) > 0 && ((int) avancement) < 100) {
+                        model_table.setValueAt(avancement, ligne[0], 2);
+                    } else {
+                        model_table.setValueAt("Terminé", ligne[0], 2);
+                        tache.telechargement_effectue(true);
+
+                        verifier_telechargements();
+                    }
+                });
+                try {
+                    tache.telecharger();
+                } catch (IOException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         };
         if (!tache_restant) {
-            this.taches.clear();
-            this.threads.clear();
             initialiser_boutons();
         }
     }
@@ -633,7 +646,6 @@ public class MainWindow extends javax.swing.JFrame {
                 if (!elementExistant) {
                     nomDuProjetCombo.addItem(projet);
                     nomDuProjetCombo.setSelectedIndex(TAILLE_COMBO);
-                    System.out.println("added");
                 }
             }
         });
