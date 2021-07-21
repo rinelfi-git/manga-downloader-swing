@@ -409,6 +409,8 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void charger_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_charger_btnActionPerformed
         if (information_complet()) {
+            this.taches = new ArrayList<>();
+            this.threads = new ArrayList<>();
             bouton_charger();
             final String nom_du_projet = nomDuProjetCombo.getSelectedItem().toString(),
                     dossier_de_sauvegarde = sauvegarde_input.getText(),
@@ -449,37 +451,47 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_charger_btnActionPerformed
 
     private void demarrer_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_demarrer_btnActionPerformed
-        DefaultTableModel model_table = (DefaultTableModel) liste_de_tache_table.getModel();
-        final int TAILLE_TACHE = taches.size();
-        this.threads = new ArrayList<>();
-        for (int iteration = 0; iteration < TAILLE_TACHE; iteration++) {
-            final int ligne = iteration;
-            Thread thread = new Thread(() -> {
-                try {
-                    if (this.threads.size() > 0 && ligne > PAR_TELECHARGEMENT) {
-                        this.threads.get(ligne - 1).join();
-                    }
-                    taches.get(ligne).ajouter_observateur_etat(avancement -> {
-                        model_table.setValueAt("Téléchargement", ligne, 2);
-                        if (((int) avancement) > 0 && ((int) avancement) < 100) {
-                            model_table.setValueAt(avancement, ligne, 2);
-                        } else {
-                            model_table.setValueAt("Terminé", ligne, 2);
-                            taches.get(ligne).telechargement_effectue(true);
+        new Thread(() -> {
+            DefaultTableModel model_table = (DefaultTableModel) liste_de_tache_table.getModel();
+            final int TAILLE_TACHE = taches.size();
+            this.threads = new ArrayList<>();
+            for (int iteration = 0; iteration < TAILLE_TACHE; iteration++) {
+                final int ligne = iteration;
+                Thread thread = new Thread(() -> {
+                    try {
+                        if (this.threads.size() > 0 && ligne > PAR_TELECHARGEMENT) {
+                            this.threads.get(ligne - PAR_TELECHARGEMENT).join();
                         }
-                    });
-                    taches.get(ligne).telecharger();
-                    while (!taches.get(ligne).is_termine()) {
+                        taches.get(ligne).ajouter_observateur_etat(avancement -> {
+                            SwingUtilities.invokeLater(() -> {
+                                model_table.setValueAt("Téléchargement", ligne, 2);
+                                if (((int) avancement) > 0 && ((int) avancement) < 100) {
+                                    model_table.setValueAt(avancement, ligne, 2);
+                                } else {
+                                    model_table.setValueAt("Terminé", ligne, 2);
+                                    taches.get(ligne).telechargement_effectue(true);
+                                }
+                            });
+                        });
+                        taches.get(ligne).telecharger();
+                        while (!taches.get(ligne).is_termine()) {
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-            threads.add(thread);
-        }
-        this.threads.forEach(thread -> thread.start());
+                });
+                threads.add(thread);
+            }
+            this.threads.forEach(thread -> thread.start());
+            try {
+                this.threads.get(this.threads.size() - PAR_TELECHARGEMENT).join();
+                initialiser_boutons();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_demarrer_btnActionPerformed
 
     private void arreter_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_arreter_btnActionPerformed
@@ -562,37 +574,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     private boolean is_number(String object) {
         return object.matches("^[0-9]*|([0-9]*.[0-9]{1,})$");
-    }
-
-    private void verifier_telechargements() {
-        boolean tache_restant = false;
-        DefaultTableModel model_table = (DefaultTableModel) liste_de_tache_table.getModel();
-        int[] ligne = new int[]{0};
-        for (TelechargementFichier tache : this.taches) {
-            ligne[0]++;
-            if (tache.is_en_attente()) {
-                tache_restant = true;
-                tache.ajouter_observateur_etat(avancement -> {
-                    model_table.setValueAt("Téléchargement", ligne[0], 2);
-                    if (((int) avancement) > 0 && ((int) avancement) < 100) {
-                        model_table.setValueAt(avancement, ligne[0], 2);
-                    } else {
-                        model_table.setValueAt("Terminé", ligne[0], 2);
-                        tache.telechargement_effectue(true);
-
-                        verifier_telechargements();
-                    }
-                });
-                try {
-                    tache.telecharger();
-                } catch (IOException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
-        if (!tache_restant) {
-            initialiser_boutons();
-        }
     }
 
     private void initialiser_boutons() {

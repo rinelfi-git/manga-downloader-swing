@@ -1,5 +1,5 @@
-/home/rinelfi/Workspace/Java/netbeans/manga_scan_downloader/src/main/java/mg/rinelfi/manga_scan_downloader/Launcher.java
-/home/rinelfi/Workspace/Java/netbeans/manga_scan_downloader/src/main/java/mg/rinelfi/manga_scan_downloader/interfaces/Observer.java
-/home/rinelfi/Workspace/Java/netbeans/manga_scan_downloader/src/main/java/mg/rinelfi/manga_scan_downloader/interfaces/Observable.java
-/home/rinelfi/Workspace/Java/netbeans/manga_scan_downloader/src/main/java/mg/rinelfi/manga_scan_downloader/request/TelechargementFichier.java
-/home/rinelfi/Workspace/Java/netbeans/manga_scan_downloader/src/main/java/mg/rinelfi/manga_scan_downloader/gui/MainWindow.java
+D:\Workspace\JavaDesktop\manga-downloader-swing\src\main\java\mg\rinelfi\manga_scan_downloader\gui\MainWindow.java
+D:\Workspace\JavaDesktop\manga-downloader-swing\src\main\java\mg\rinelfi\manga_scan_downloader\interfaces\Observable.java
+D:\Workspace\JavaDesktop\manga-downloader-swing\src\main\java\mg\rinelfi\manga_scan_downloader\request\TelechargementFichier.java
+D:\Workspace\JavaDesktop\manga-downloader-swing\src\main\java\mg\rinelfi\manga_scan_downloader\Launcher.java
+D:\Workspace\JavaDesktop\manga-downloader-swing\src\main\java\mg\rinelfi\manga_scan_downloader\interfaces\Observer.java
